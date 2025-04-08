@@ -60,7 +60,7 @@ class Maze:
             return
         
         self._window.redraw()
-        time.sleep(0.05)
+        time.sleep(0.02)
 
     def _break_entrance_and_exit(self):
         self._cells[0][0].has_top_wall = False
