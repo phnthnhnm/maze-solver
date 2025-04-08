@@ -110,8 +110,42 @@ class Maze:
             for cell in column:
                 cell.visited = False
 
-    def solve(self):
-        return self._solve_r(0, 0)
+    def solve(self, alg="dfs"):
+        if alg == "dfs":
+            return self._solve_r(0, 0)
+        elif alg == "bfs":
+            return self._solve_bfs()
+        else:
+            raise ValueError(f"Unknown algorithm: {alg}")
+
+    def _solve_bfs(self):
+        from collections import deque
+
+        queue = deque([(0, 0)])
+        self._reset_cells_visited()
+
+        while queue:
+            i, j = queue.popleft()
+            self._animate()
+
+            if self._cells[i][j].visited:
+                continue
+
+            self._cells[i][j].visited = True
+
+            if i == self._num_columns - 1 and j == self._num_rows - 1:
+                return True
+
+            if i > 0 and not self._cells[i][j].has_left_wall and not self._cells[i - 1][j].visited:
+                queue.append((i - 1, j))
+            if i < self._num_columns - 1 and not self._cells[i][j].has_right_wall and not self._cells[i + 1][j].visited:
+                queue.append((i + 1, j))
+            if j > 0 and not self._cells[i][j].has_top_wall and not self._cells[i][j - 1].visited:
+                queue.append((i, j - 1))
+            if j < self._num_rows - 1 and not self._cells[i][j].has_bottom_wall and not self._cells[i][j + 1].visited:
+                queue.append((i, j + 1))
+
+        return False
 
     def _solve_r(self, i, j):
         self._animate()
