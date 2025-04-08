@@ -60,7 +60,7 @@ class Maze:
             return
         
         self._window.redraw()
-        time.sleep(0.02)
+        time.sleep(0.01)
 
     def _break_entrance_and_exit(self):
         self._cells[0][0].has_top_wall = False
@@ -112,42 +112,46 @@ class Maze:
 
     def solve(self, alg="dfs"):
         if alg == "dfs":
-            return self._solve_r(0, 0)
+            return self._solve_dfs(0, 0)
         elif alg == "bfs":
-            return self._solve_bfs()
+            return self._solve_bfs(0, 0)
         else:
             raise ValueError(f"Unknown algorithm: {alg}")
 
-    def _solve_bfs(self):
+    def _solve_bfs(self, i, j):
         from collections import deque
 
-        queue = deque([(0, 0)])
-        self._reset_cells_visited()
+        queue = deque([(i, j)])
+        self._cells[i][j].visited = True
 
         while queue:
-            i, j = queue.popleft()
+            x, y = queue.popleft()
             self._animate()
 
-            if self._cells[i][j].visited:
-                continue
-
-            self._cells[i][j].visited = True
-
-            if i == self._num_columns - 1 and j == self._num_rows - 1:
+            if x == self._num_columns - 1 and y == self._num_rows - 1:
                 return True
 
-            if i > 0 and not self._cells[i][j].has_left_wall and not self._cells[i - 1][j].visited:
-                queue.append((i - 1, j))
-            if i < self._num_columns - 1 and not self._cells[i][j].has_right_wall and not self._cells[i + 1][j].visited:
-                queue.append((i + 1, j))
-            if j > 0 and not self._cells[i][j].has_top_wall and not self._cells[i][j - 1].visited:
-                queue.append((i, j - 1))
-            if j < self._num_rows - 1 and not self._cells[i][j].has_bottom_wall and not self._cells[i][j + 1].visited:
-                queue.append((i, j + 1))
+            for dx, dy, wall_check in [
+                (-1, 0, lambda x, y: not self._cells[x][y].has_left_wall),
+                (1, 0, lambda x, y: not self._cells[x][y].has_right_wall),
+                (0, -1, lambda x, y: not self._cells[x][y].has_top_wall),
+                (0, 1, lambda x, y: not self._cells[x][y].has_bottom_wall),
+            ]:
+                nx, ny = x + dx, y + dy
+
+                if (
+                    0 <= nx < self._num_columns
+                    and 0 <= ny < self._num_rows
+                    and not self._cells[nx][ny].visited
+                    and wall_check(x, y)
+                ):
+                    self._cells[x][y].draw_move(self._cells[nx][ny])
+                    self._cells[nx][ny].visited = True
+                    queue.append((nx, ny))
 
         return False
 
-    def _solve_r(self, i, j):
+    def _solve_dfs(self, i, j):
         self._animate()
 
         self._cells[i][j].visited = True
@@ -161,7 +165,7 @@ class Maze:
             and not self._cells[i - 1][j].visited
         ):
             self._cells[i][j].draw_move(self._cells[i - 1][j])
-            if self._solve_r(i - 1, j):
+            if self._solve_dfs(i - 1, j):
                 return True
             else:
                 self._cells[i][j].draw_move(self._cells[i - 1][j], True)
@@ -172,7 +176,7 @@ class Maze:
             and not self._cells[i + 1][j].visited
         ):
             self._cells[i][j].draw_move(self._cells[i + 1][j])
-            if self._solve_r(i + 1, j):
+            if self._solve_dfs(i + 1, j):
                 return True
             else:
                 self._cells[i][j].draw_move(self._cells[i + 1][j], True)
@@ -183,7 +187,7 @@ class Maze:
             and not self._cells[i][j - 1].visited
         ):
             self._cells[i][j].draw_move(self._cells[i][j - 1])
-            if self._solve_r(i, j - 1):
+            if self._solve_dfs(i, j - 1):
                 return True
             else:
                 self._cells[i][j].draw_move(self._cells[i][j - 1], True)
@@ -194,7 +198,7 @@ class Maze:
             and not self._cells[i][j + 1].visited
         ):
             self._cells[i][j].draw_move(self._cells[i][j + 1])
-            if self._solve_r(i, j + 1):
+            if self._solve_dfs(i, j + 1):
                 return True
             else:
                 self._cells[i][j].draw_move(self._cells[i][j + 1], True)
