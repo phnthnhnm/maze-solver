@@ -48,3 +48,36 @@ class Line:
         canvas.create_line(
             self.p1.x, self.p1.y, self.p2.x, self.p2.y, fill=fill_color, width=2
         )
+
+
+class Button:
+    def __init__(self, window, text, x, y, width, height, command):
+        self.__window = window
+        self.__canvas = window._Window__canvas
+        self.__x = x
+        self.__y = y
+        self.__width = width
+        self.__height = height
+        self.__command = command
+
+        self.__button = self.__canvas.create_rectangle(
+            x, y, x + width, y + height, fill="lightgray", outline="black"
+        )
+        self.__text = self.__canvas.create_text(
+            x + width // 2, y + height // 2, text=text, fill="black"
+        )
+
+        self.__canvas.tag_bind(self.__button, "<Button-1>", self.__on_click)
+        self.__canvas.tag_bind(self.__text, "<Button-1>", self.__on_click)
+
+    def __on_click(self, event):
+        if self.__command:
+            self.__command()
+
+    def show(self):
+        self.__canvas.itemconfigure(self.__button, state="normal")
+        self.__canvas.itemconfigure(self.__text, state="normal")
+
+    def hide(self):
+        self.__canvas.itemconfigure(self.__button, state="hidden")
+        self.__canvas.itemconfigure(self.__text, state="hidden")
