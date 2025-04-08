@@ -115,6 +115,8 @@ class Maze:
             return self._solve_dfs(0, 0)
         elif alg == "bfs":
             return self._solve_bfs(0, 0)
+        elif alg == "a_star":
+            return self._solve_a_star(0, 0)
         else:
             raise ValueError(f"Unknown algorithm: {alg}")
 
@@ -202,5 +204,42 @@ class Maze:
                 return True
             else:
                 self._cells[i][j].draw_move(self._cells[i][j + 1], True)
+
+        return False
+
+    def _solve_a_star(self, i, j):
+        from heapq import heappush, heappop
+
+        def heuristic(x, y):
+            return abs(x - (self._num_columns - 1)) + abs(y - (self._num_rows - 1))
+
+        open_set = []
+        heappush(open_set, (0 + heuristic(i, j), 0, i, j))
+        self._cells[i][j].visited = True
+
+        while open_set:
+            _, cost, x, y = heappop(open_set)
+            self._animate()
+
+            if x == self._num_columns - 1 and y == self._num_rows - 1:
+                return True
+
+            for dx, dy, wall_check in [
+                (-1, 0, lambda x, y: not self._cells[x][y].has_left_wall),
+                (1, 0, lambda x, y: not self._cells[x][y].has_right_wall),
+                (0, -1, lambda x, y: not self._cells[x][y].has_top_wall),
+                (0, 1, lambda x, y: not self._cells[x][y].has_bottom_wall),
+            ]:
+                nx, ny = x + dx, y + dy
+
+                if (
+                    0 <= nx < self._num_columns
+                    and 0 <= ny < self._num_rows
+                    and not self._cells[nx][ny].visited
+                    and wall_check(x, y)
+                ):
+                    self._cells[x][y].draw_move(self._cells[nx][ny])
+                    self._cells[nx][ny].visited = True
+                    heappush(open_set, (cost + 1 + heuristic(nx, ny), cost + 1, nx, ny))
 
         return False

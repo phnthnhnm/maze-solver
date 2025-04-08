@@ -18,7 +18,7 @@ def main():
     maze = Maze(margin, margin, num_rows, num_columns, cell_size_x, cell_size_y, window, 200)
     print("Maze created!")
     
-    is_solvable = maze.solve("dfs")
+    is_solvable = maze.solve("a_star")
     print("Solving the maze...")
     
     if not is_solvable:
