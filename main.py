@@ -3,8 +3,8 @@ from graphics import Window, Button
 from maze import Maze
 from settings import create_settings_menu
 
-def start_process(window, margin, num_rows, num_columns, cell_size_x, cell_size_y, algorithm, seed):
-    maze = Maze(margin, margin, num_rows, num_columns, cell_size_x, cell_size_y, window, seed)
+def start_process(window, margin, num_rows, num_columns, cell_size_x, cell_size_y, algorithm, seed, speed):
+    maze = Maze(margin, margin, num_rows, num_columns, cell_size_x, cell_size_y, window, seed, speed)
     print("Maze created!")
 
     is_solvable = maze.solve(algorithm)
@@ -27,8 +27,9 @@ def main():
 
     sys.setrecursionlimit(10000)
 
-    algorithm = ["DFS"]
+    algorithm = ["dfs"]
     seed = [42]  # Default seed value
+    speed = [0.01]  # Default speed value
 
     def show_main_menu():
         start_button.show()
@@ -38,11 +39,11 @@ def main():
         start_button.hide()
         settings_button.hide()
 
-    show_settings_menu = create_settings_menu(window, screen_x, screen_y, algorithm, seed, show_main_menu)
+    show_settings_menu = create_settings_menu(window, screen_x, screen_y, algorithm, seed, speed, show_main_menu)
 
     def on_start_click():
         hide_main_menu()
-        start_process(window, margin, num_rows, num_columns, cell_size_x, cell_size_y, algorithm[0], seed[0])
+        start_process(window, margin, num_rows, num_columns, cell_size_x, cell_size_y, algorithm[0], seed[0], speed)
 
     def on_settings_click():
         hide_main_menu()

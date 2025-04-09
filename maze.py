@@ -14,6 +14,7 @@ class Maze:
         cell_size_y,
         window=None,
         seed=None,
+        speed=[0.01],
     ):
         self._cells = []
         self._x1 = x1
@@ -23,6 +24,7 @@ class Maze:
         self._cell_size_x = cell_size_x
         self._cell_size_y = cell_size_y
         self._window = window
+        self._speed = speed
 
         if seed:
             random.seed(seed)
@@ -58,9 +60,9 @@ class Maze:
     def _animate(self):
         if self._window is None:
             return
-        
+
         self._window.redraw()
-        time.sleep(0.01)
+        time.sleep(self._speed[0])
 
     def _break_entrance_and_exit(self):
         self._cells[0][0].has_top_wall = False
