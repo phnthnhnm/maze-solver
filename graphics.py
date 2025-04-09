@@ -1,4 +1,4 @@
-from tkinter import Tk, BOTH, Canvas
+from tkinter import Tk, BOTH, Canvas, StringVar, OptionMenu
 
 
 class Window:
@@ -81,3 +81,18 @@ class Button:
     def hide(self):
         self.__canvas.itemconfigure(self.__button, state="hidden")
         self.__canvas.itemconfigure(self.__text, state="hidden")
+
+
+class Dropdown:
+    def __init__(self, root, options, default, on_select):
+        self._var = StringVar(root)
+        self._var.set(default)
+        self._var.trace("w", lambda *args: on_select(self._var.get()))
+
+        self._menu = OptionMenu(root, self._var, *options)
+
+    def place(self, x, y):
+        self._menu.place(x=x, y=y)
+
+    def hide(self):
+        self._menu.place_forget()
