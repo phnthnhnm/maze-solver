@@ -27,6 +27,7 @@ def create_settings_menu(window, screen_x, screen_y, algorithm, seed, show_main_
     seed_input = InputField(window._Window__root, "Seed:", seed[0], on_seed_change)
 
     back_button = Button(window, "Back", screen_x // 2 - 50, screen_y // 2 + 100, 100, 50, on_back_click)
+    back_button.hide()
 
     def show_settings_menu():
         dropdown.place(screen_x // 2 - 50, screen_y // 2 - 75)
