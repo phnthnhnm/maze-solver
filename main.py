@@ -27,7 +27,7 @@ def main():
 
     sys.setrecursionlimit(10000)
 
-    algorithm = ["dfs"]
+    algorithm = ["DFS"]
     seed = [42]  # Default seed value
 
     def show_main_menu():

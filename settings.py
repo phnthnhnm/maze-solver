@@ -1,8 +1,9 @@
-from graphics import Button, Dropdown, InputField
+from graphics import Button, Dropdown, InputField, Label
 import random
 
 def create_settings_menu(window, screen_x, screen_y, algorithm, seed, show_main_menu):
     def on_back_click():
+        algorithm_label.place_forget()
         dropdown.hide()
         seed_input.hide()
         randomize_button.hide()
@@ -25,15 +26,12 @@ def create_settings_menu(window, screen_x, screen_y, algorithm, seed, show_main_
         seed_input.update_value(seed[0])
         print(f"Seed randomized to: {seed[0]}")
 
-    # Create a dropdown menu for algorithm selection
+    algorithm_label = Label(window._Window__root, text="Algorithm:")
     dropdown = Dropdown(
-        window._Window__root, ["dfs", "bfs", "a_star"], algorithm[0], on_algorithm_select
+        window._Window__root, ["DFS", "BFS", "A*"], algorithm[0], on_algorithm_select
     )
 
-    # Create seed input field
     seed_input = InputField(window._Window__root, "Seed:", seed[0], on_seed_change)
-
-    # Create randomize button
     randomize_button = Button(window, "Randomize", screen_x // 2 + 120, screen_y // 2, 100, 30, on_randomize_seed)
     randomize_button.hide()
 
@@ -41,7 +39,8 @@ def create_settings_menu(window, screen_x, screen_y, algorithm, seed, show_main_
     back_button.hide() 
     
     def show_settings_menu():
-        dropdown.place(screen_x // 2 - 50, screen_y // 2 - 75)
+        algorithm_label.place(x=screen_x // 2 - 100, y=screen_y // 2 - 75)
+        dropdown.place(screen_x // 2 - 20, screen_y // 2 - 75)
         seed_input.place(screen_x // 2 - 100, screen_y // 2, screen_x // 2 - 50, screen_y // 2)
         randomize_button.show()
         back_button.show()
