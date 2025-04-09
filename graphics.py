@@ -112,3 +112,7 @@ class InputField:
     def hide(self):
         self._label.place_forget()
         self._entry.place_forget()
+
+    def update_value(self, new_value):
+        self._entry.delete(0, "end")
+        self._entry.insert(0, str(new_value))
