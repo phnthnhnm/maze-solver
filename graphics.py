@@ -1,4 +1,4 @@
-from tkinter import Tk, BOTH, Canvas, StringVar, OptionMenu
+from tkinter import Tk, BOTH, Canvas, StringVar, OptionMenu, Entry, Label
 
 
 class Window:
@@ -96,3 +96,19 @@ class Dropdown:
 
     def hide(self):
         self._menu.place_forget()
+
+
+class InputField:
+    def __init__(self, root, label_text, default_value, on_change):
+        self._label = Label(root, text=label_text)
+        self._entry = Entry(root)
+        self._entry.insert(0, str(default_value))
+        self._entry.bind("<Return>", lambda event: on_change(self._entry.get()))
+
+    def place(self, label_x, label_y, entry_x, entry_y):
+        self._label.place(x=label_x, y=label_y)
+        self._entry.place(x=entry_x, y=entry_y)
+
+    def hide(self):
+        self._label.place_forget()
+        self._entry.place_forget()
