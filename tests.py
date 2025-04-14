@@ -53,6 +53,7 @@ class Tests(unittest.TestCase):
                     cell.visited,
                     False,
                 )
-                
+
+
 if __name__ == "__main__":
     unittest.main()

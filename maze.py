@@ -33,7 +33,7 @@ class Maze:
         self._break_entrance_and_exit()
         self._break_walls_r(0, 0)
         self._reset_cells_visited()
-        
+
     def _create_cells(self):
         for i in range(self._num_columns):
             col_cells = []
@@ -48,7 +48,7 @@ class Maze:
     def _draw_cell(self, i, j):
         if self._window is None:
             return
-        
+
         x1 = self._x1 + i * self._cell_size_x
         y1 = self._y1 + j * self._cell_size_y
         x2 = x1 + self._cell_size_x
@@ -72,7 +72,7 @@ class Maze:
 
     def _break_walls_r(self, i, j):
         self._cells[i][j].visited = True
-        
+
         while True:
             next_index_list = []
 
@@ -173,7 +173,7 @@ class Maze:
                 return True
             else:
                 self._cells[i][j].draw_move(self._cells[i - 1][j], True)
-        
+
         if (
             i < self._num_columns - 1
             and not self._cells[i][j].has_right_wall
